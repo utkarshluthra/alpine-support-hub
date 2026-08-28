@@ -1,12 +1,15 @@
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  Headphones,
-  Zap,
-  Shield,
-  Clock,
+  Mountain,
+  BookOpen,
+  Ticket,
+  Calendar,
   MessageSquare,
-  BarChart3,
+  Shield,
+  Terminal,
+  Zap,
+  Users,
 } from "lucide-react";
 import { Link } from "react-router";
 
@@ -14,32 +17,30 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
-      <nav className="border-b-2 border-foreground">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center bg-[var(--swiss-red)] text-white">
-              <Headphones className="size-5" />
-            </div>
-            <span className="text-lg font-bold tracking-tight uppercase">
-              Support
+      <nav className="border-b border-border">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-8 py-4">
+          <div className="flex items-center gap-2.5">
+            <Mountain className="size-5 text-primary" />
+            <span className="alpine-label text-foreground text-xs tracking-widest">
+              Alpine Support Hub
             </span>
           </div>
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <Link
               to="/dashboard"
-              className="swiss-label hover:text-foreground transition-colors"
+              className="alpine-label text-muted-foreground hover:text-foreground transition-colors"
             >
               Dashboard
             </Link>
             <Link
               to="/auth"
-              className="swiss-label hover:text-foreground transition-colors"
+              className="alpine-label text-muted-foreground hover:text-foreground transition-colors"
             >
               Sign In
             </Link>
             <Link
               to="/auth"
-              className="bg-[var(--swiss-black)] px-6 py-2.5 text-sm font-bold uppercase tracking-wider text-white hover:bg-[var(--swiss-black)]/80 transition-colors"
+              className="bg-primary px-5 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/80 transition-colors"
             >
               Get Started
             </Link>
@@ -47,129 +48,103 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="border-b-2 border-foreground">
-        <div className="mx-auto max-w-7xl px-8 py-24 lg:py-32">
+      {/* Hero */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-8 py-20 lg:py-28">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
-            <div className="mb-8">
-              <span className="swiss-label text-[var(--swiss-red)]">
-                Swiss Precision Support
-              </span>
+            <div className="mb-6 flex items-center gap-2">
+              <Terminal className="size-4 text-primary" />
+              <span className="alpine-label text-primary">v1.0</span>
             </div>
-            <h1 className="swiss-heading text-5xl sm:text-7xl lg:text-8xl xl:text-9xl max-w-5xl">
-              Every Ticket.
+            <h1 className="alpine-heading text-4xl sm:text-6xl lg:text-7xl max-w-3xl">
+              Internal Support
               <br />
-              <span className="text-[var(--swiss-blue)]">
-                Resolved.
-              </span>
+              <span className="text-primary">Infrastructure</span>
             </h1>
-            <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground">
+              A unified support platform for your team. Ticket management,
+              knowledge base, scheduling, and internal communication — all in one
+              place.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
                 to="/auth"
-                className="inline-flex items-center gap-3 bg-[var(--swiss-red)] px-8 py-4 text-sm font-bold uppercase tracking-wider text-white hover:bg-[var(--swiss-red)]/80 transition-colors"
+                className="inline-flex items-center gap-2 bg-primary px-6 py-3 text-xs font-semibold text-primary-foreground hover:bg-primary/80 transition-colors"
               >
-                Start Supporting
-                <ArrowRight className="size-4" />
+                Sign In
+                <ArrowRight className="size-3.5" />
               </Link>
               <Link
-                to="/auth?returnTo=/dashboard/agent"
-                className="inline-flex items-center gap-3 border-2 border-foreground px-8 py-4 text-sm font-bold uppercase tracking-wider hover:bg-foreground hover:text-background transition-colors"
+                to="/dashboard/knowledge-base"
+                className="inline-flex items-center gap-2 border border-border px-6 py-3 text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
               >
-                Agent Login
+                Browse Knowledge Base
               </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Stats Bar */}
-      <section className="border-b-2 border-foreground bg-[var(--swiss-black)] text-white">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x-2 divide-white/20">
-          {[
-            { value: "< 4h", label: "Average Response Time" },
-            { value: "98%", label: "Customer Satisfaction" },
-            { value: "24/7", label: "Support Coverage" },
-          ].map((stat) => (
-            <div key={stat.label} className="px-8 py-8 sm:py-12">
-              <div className="swiss-heading text-4xl lg:text-5xl text-[var(--swiss-red)]">
-                {stat.value}
-              </div>
-              <div className="mt-2 swiss-label text-white/70">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="border-b-2 border-foreground">
-        <div className="mx-auto max-w-7xl px-8 py-24">
-          <div className="mb-16">
-            <span className="swiss-label text-[var(--swiss-blue)]">
-              Capabilities
-            </span>
-            <h2 className="swiss-heading text-4xl lg:text-6xl mt-4">
-              Built for
-              <br />
-              Clarity.
+      {/* Modules */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-8 py-16">
+          <div className="mb-10">
+            <span className="alpine-label text-primary">Modules</span>
+            <h2 className="alpine-heading text-2xl lg:text-3xl mt-3">
+              What's Inside
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-2 border-foreground">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-border">
             {[
               {
-                icon: Zap,
-                title: "Instant Triage",
-                desc: "Automatic priority classification ensures the most critical issues are handled first.",
+                icon: Ticket,
+                title: "Ticket System",
+                desc: "Submit, triage, and resolve support requests with full conversation threads and priority management.",
+              },
+              {
+                icon: BookOpen,
+                title: "Knowledge Base",
+                desc: "Browse searchable documentation, guides, and internal articles to find answers fast.",
+              },
+              {
+                icon: Calendar,
+                title: "Scheduling",
+                desc: "Book time slots for support sessions, consultations, or team sync-ups.",
               },
               {
                 icon: MessageSquare,
-                title: "Threaded Conversations",
-                desc: "Keep all context in one place with full conversation history per ticket.",
+                title: "Internal Posts",
+                desc: "Share updates, tips, and announcements with the team in a threaded feed.",
               },
               {
                 icon: Shield,
-                title: "Role-Based Access",
-                desc: "Separate customer and agent views with clear permission boundaries.",
+                title: "Admin Console",
+                desc: "Manage users, articles, bookings, and system settings from a centralized admin area.",
               },
               {
-                icon: Clock,
-                title: "Status Tracking",
-                desc: "Track tickets from open through in-progress to resolved with clear status indicators.",
+                icon: Users,
+                title: "Team Roles",
+                desc: "Role-based access control separates customer, agent, and admin capabilities.",
               },
-              {
-                icon: BarChart3,
-                title: "Dashboard Analytics",
-                desc: "Real-time stats on ticket volume, response times, and resolution rates.",
-              },
-              {
-                icon: Headphones,
-                title: "Agent Assignment",
-                desc: "Assign tickets to specific agents and track ownership across the pipeline.",
-              },
-            ].map((feature, i) => (
+            ].map((mod, i) => (
               <motion.div
-                key={feature.title}
+                key={mod.title}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.08 }}
                 viewport={{ once: true }}
-                className={`p-8 border-foreground ${
-                  i < 3 ? "border-b-2" : ""
-                } ${i % 3 !== 2 ? "lg:border-r-2" : ""} ${
-                  i % 2 !== 1 ? "md:border-r-2 lg:border-r-2" : ""
-                } ${i % 2 !== 1 && i >= 4 ? "md:border-r-0 lg:border-r-0" : ""}`}
+                className="border-border p-6 border-b md:border-r last:border-r-0 last:border-b-0 lg:[&:nth-last-child(-n+3)]:border-b-0 md:[&:nth-last-child(-n+2)]:border-b-0 lg:[&:nth-child(3n)]:border-r-0 md:[&:nth-child(2n)]:border-r-0"
               >
-                <div className="mb-4 flex size-10 items-center justify-center border-2 border-foreground">
-                  <feature.icon className="size-5" />
+                <div className="mb-4 flex size-9 items-center justify-center border border-border text-muted-foreground">
+                  <mod.icon className="size-4" />
                 </div>
-                <h3 className="text-lg font-bold uppercase tracking-tight">
-                  {feature.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {feature.desc}
+                <h3 className="text-sm font-semibold">{mod.title}</h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                  {mod.desc}
                 </p>
               </motion.div>
             ))}
@@ -177,50 +152,73 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="border-b-2 border-foreground bg-[var(--swiss-red)] text-white">
-        <div className="mx-auto max-w-7xl px-8 py-24 text-center">
+      {/* Tech Stack */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-8 py-16">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+            <div>
+              <span className="alpine-label text-primary">Built With</span>
+              <h2 className="alpine-heading text-2xl lg:text-3xl mt-3">
+                Technical Foundation
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground max-w-md">
+                Real-time backend, type-safe queries, reactive UI. Built on
+                Convex with React, TypeScript, and Tailwind.
+              </p>
+            </div>
+            <div className="flex items-center gap-6">
+              {["Convex", "React", "TypeScript", "Tailwind", "Vite"].map(
+                (tech) => (
+                  <div
+                    key={tech}
+                    className="border border-border px-4 py-2 text-xs font-semibold text-muted-foreground"
+                  >
+                    {tech}
+                  </div>
+                ),
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-primary">
+        <div className="mx-auto max-w-6xl px-8 py-16 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <h2 className="swiss-heading text-4xl lg:text-6xl">
-              Ready to Support
-              <br />
-              with Precision?
+            <h2 className="alpine-heading text-2xl lg:text-4xl text-primary-foreground">
+              Start Supporting
             </h2>
-            <p className="mt-6 text-lg text-white/80 max-w-xl mx-auto">
-              Start resolving tickets with the clarity and efficiency of Swiss
-              engineering.
+            <p className="mt-3 text-sm text-primary-foreground/70">
+              Sign in to access the full platform.
             </p>
             <Link
               to="/auth"
-              className="mt-10 inline-flex items-center gap-3 bg-white px-8 py-4 text-sm font-bold uppercase tracking-wider text-[var(--swiss-black)] hover:bg-white/90 transition-colors"
+              className="mt-6 inline-flex items-center gap-2 bg-background px-6 py-3 text-xs font-semibold text-foreground hover:bg-background/90 transition-colors"
             >
-              Create Account
-              <ArrowRight className="size-4" />
+              Sign In
+              <ArrowRight className="size-3.5" />
             </Link>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-[var(--swiss-black)] text-white">
-        <div className="mx-auto max-w-7xl px-8 py-12">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <div className="flex size-8 items-center justify-center bg-[var(--swiss-red)]">
-                <Headphones className="size-4" />
-              </div>
-              <span className="text-sm font-bold uppercase tracking-wider">
-                Support
-              </span>
-            </div>
-            <div className="swiss-label text-white/50">
-              Swiss Precision Support System
-            </div>
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-8 py-6">
+          <div className="flex items-center gap-2">
+            <Mountain className="size-3.5 text-muted-foreground" />
+            <span className="alpine-label text-muted-foreground">
+              Alpine Support Hub
+            </span>
           </div>
+          <span className="text-[10px] text-muted-foreground">
+            Internal Use Only
+          </span>
         </div>
       </footer>
     </div>

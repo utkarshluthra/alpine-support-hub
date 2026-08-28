@@ -3,24 +3,8 @@ import { useParams, Link } from "react-router";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
+import { AppLayout } from "@/components/AppLayout";
 import { ArrowLeft, Send } from "lucide-react";
-
-const STATUS_STYLES: Record<string, { label: string; className: string }> = {
-  open: { label: "Open", className: "bg-[var(--swiss-blue)] text-white" },
-  in_progress: {
-    label: "In Progress",
-    className: "bg-[var(--swiss-black)] text-white",
-  },
-  resolved: { label: "Resolved", className: "bg-green-700 text-white" },
-  closed: { label: "Closed", className: "bg-muted text-muted-foreground" },
-};
-
-const PRIORITY_STYLES: Record<string, string> = {
-  urgent: "text-[var(--swiss-red)] font-bold",
-  high: "text-[var(--swiss-red)]",
-  medium: "text-muted-foreground",
-  low: "text-muted-foreground",
-};
 
 function formatTime(ts: number) {
   const d = new Date(ts);
@@ -51,13 +35,12 @@ export default function CustomerTicketDetail() {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!reply.trim() || !ticketId) return;
-
     setIsSending(true);
     try {
       await sendMessage({ ticketId: ticketId as any, content: reply.trim() });
       setReply("");
     } catch (error) {
-      console.error("Failed to send message:", error);
+      console.error("Failed to send:", error);
     } finally {
       setIsSending(false);
     }
@@ -65,127 +48,127 @@ export default function CustomerTicketDetail() {
 
   if (ticket === undefined || messages === undefined) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading ticket...</p>
-      </main>
+      <AppLayout>
+        <div className="px-8 py-16 text-center text-sm text-muted-foreground">
+          Loading...
+        </div>
+      </AppLayout>
     );
   }
 
   if (!ticket) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="swiss-heading text-4xl">Ticket Not Found</h1>
+      <AppLayout>
+        <div className="px-8 py-16 text-center">
+          <h1 className="alpine-heading text-2xl">Not Found</h1>
           <Link
-            to="/dashboard"
-            className="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            to="/dashboard/tickets"
+            className="mt-4 inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"
           >
-            <ArrowLeft className="size-4" />
+            <ArrowLeft className="size-3" />
             Back to tickets
           </Link>
         </div>
-      </main>
+      </AppLayout>
     );
   }
 
-  const status = STATUS_STYLES[ticket.status] ?? STATUS_STYLES.open;
-
   return (
-    <main className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b-2 border-foreground">
-        <div className="mx-auto max-w-4xl px-8 py-8">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
-          >
-            <ArrowLeft className="size-4" />
-            Back to tickets
-          </Link>
+    <AppLayout>
+      <div className="px-8 py-8 max-w-4xl">
+        <Link
+          to="/dashboard/tickets"
+          className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6"
+        >
+          <ArrowLeft className="size-3" />
+          Back to tickets
+        </Link>
 
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            <div className="min-w-0">
-              <span className="swiss-label text-[var(--swiss-blue)]">
-                Ticket #{ticket._id.slice(-6).toUpperCase()}
-              </span>
-              <h1 className="swiss-heading text-3xl lg:text-4xl mt-2">
-                {ticket.title}
-              </h1>
-              <div className="mt-3 flex flex-wrap items-center gap-4">
-                <span className="swiss-label text-muted-foreground">
-                  {ticket.category}
-                </span>
-                <span className="text-foreground/20">—</span>
-                <span
-                  className={`swiss-label ${PRIORITY_STYLES[ticket.priority]}`}
-                >
-                  {ticket.priority}
-                </span>
-                {ticket.agentName && (
-                  <>
-                    <span className="text-foreground/20">—</span>
-                    <span className="swiss-label text-muted-foreground">
-                      Assigned to {ticket.agentName}
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-            <span
-              className={`inline-block shrink-0 px-4 py-2 text-xs font-bold uppercase tracking-wider ${status.className}`}
-            >
-              {status.label}
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+          <div>
+            <span className="alpine-label text-primary">
+              #{ticket._id.slice(-6).toUpperCase()}
             </span>
+            <h1 className="alpine-heading text-2xl mt-1">{ticket.title}</h1>
+            <div className="mt-2 flex items-center gap-3">
+              <span className="alpine-label">{ticket.category}</span>
+              <span className="text-border">/</span>
+              <span className="alpine-label">{ticket.priority}</span>
+              {ticket.agentName && (
+                <>
+                  <span className="text-border">/</span>
+                  <span className="alpine-label">
+                    Assigned to {ticket.agentName}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
+          <span
+            className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1 border border-current shrink-0 ${
+              ticket.status === "open"
+                ? "text-primary"
+                : ticket.status === "in_progress"
+                  ? "text-[var(--alpine-cyan)]"
+                  : ticket.status === "resolved"
+                    ? "text-[var(--alpine-green)]"
+                    : "text-muted-foreground"
+            }`}
+          >
+            {ticket.status.replace("_", " ")}
+          </span>
         </div>
-      </div>
 
-      {/* Conversation */}
-      <div className="mx-auto max-w-4xl px-8 py-8">
-        <div className="swiss-label mb-6">
-          Conversation ({messages.length} message
-          {messages.length !== 1 ? "s" : ""})
+        {/* Description */}
+        <div className="border border-border p-5 mb-6 bg-muted/30">
+          <div className="alpine-label mb-2">Description</div>
+          <p className="text-sm leading-relaxed whitespace-pre-wrap">
+            {ticket.description}
+          </p>
+        </div>
+
+        {/* Conversation */}
+        <div className="alpine-label mb-4">
+          Conversation ({messages.length})
         </div>
 
         <div className="space-y-0">
-          {messages.map((msg) => {
-            const isOwn = msg.senderId === user?._id;
-            return (
-              <div
-                key={msg._id}
-                className={`border-2 border-foreground -mb-[2px] last:mb-0 ${
-                  msg.isAgentReply
-                    ? "border-l-4 border-l-[var(--swiss-blue)]"
-                    : ""
-                }`}
-              >
-                <div className="px-6 py-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold text-sm">
-                        {msg.senderName}
-                      </span>
-                      {msg.isAgentReply && (
-                        <span className="bg-[var(--swiss-blue)] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
-                          Agent
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {formatTime(msg._creationTime)}
+          {messages.map((msg) => (
+            <div
+              key={msg._id}
+              className={`border border-border -mb-px last:mb-0 ${
+                msg.isAgentReply
+                  ? "border-l-[3px] border-l-[var(--alpine-blue)]"
+                  : ""
+              }`}
+            >
+              <div className="px-5 py-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">
+                      {msg.senderName}
                     </span>
+                    {msg.isAgentReply && (
+                      <span className="bg-primary/20 text-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+                        Agent
+                      </span>
+                    )}
                   </div>
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                    {msg.content}
-                  </p>
+                  <span className="text-[10px] text-muted-foreground alpine-mono">
+                    {formatTime(msg._creationTime)}
+                  </span>
                 </div>
+                <p className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
+                  {msg.content}
+                </p>
               </div>
-            );
-          })}
+            </div>
+          ))}
 
           {messages.length === 0 && (
-            <div className="border-2 border-dashed border-foreground/30 py-12 text-center">
-              <p className="text-sm text-muted-foreground">
+            <div className="border border-dashed border-border py-10 text-center">
+              <p className="text-xs text-muted-foreground">
                 No messages yet. An agent will respond shortly.
               </p>
             </div>
@@ -194,34 +177,28 @@ export default function CustomerTicketDetail() {
 
         {/* Reply Form */}
         {ticket.status !== "closed" && (
-          <form onSubmit={handleSend} className="mt-8">
-            <label className="swiss-label block mb-3">Your Reply</label>
+          <form onSubmit={handleSend} className="mt-6">
+            <label className="alpine-label block mb-2">Reply</label>
             <textarea
               value={reply}
               onChange={(e) => setReply(e.target.value)}
               placeholder="Type your reply..."
               rows={4}
-              className="w-full border-2 border-foreground bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--swiss-blue)] focus:ring-offset-2 resize-none transition-shadow"
+              className="w-full border border-border bg-input px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none transition-shadow"
             />
-            <div className="mt-4 flex justify-end">
+            <div className="mt-3 flex justify-end">
               <button
                 type="submit"
                 disabled={isSending || !reply.trim()}
-                className="inline-flex items-center gap-2 bg-[var(--swiss-black)] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/80 transition-colors disabled:opacity-50"
               >
-                {isSending ? (
-                  "Sending..."
-                ) : (
-                  <>
-                    Send Reply
-                    <Send className="size-4" />
-                  </>
-                )}
+                {isSending ? "Sending..." : "Send Reply"}
+                {!isSending && <Send className="size-3.5" />}
               </button>
             </div>
           </form>
         )}
       </div>
-    </main>
+    </AppLayout>
   );
 }

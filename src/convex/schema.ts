@@ -2,7 +2,6 @@ import { authTables } from "@convex-dev/auth/server";
 import { defineSchema, defineTable } from "convex/server";
 import { Infer, v } from "convex/values";
 
-// default user roles. can add / remove based on the project as needed
 export const ROLES = {
   ADMIN: "admin",
   USER: "user",
@@ -18,19 +17,16 @@ export type Role = Infer<typeof roleValidator>;
 
 const schema = defineSchema(
   {
-    // default auth tables using convex auth.
-    ...authTables, // do not remove or modify
+    ...authTables,
 
-    // the users table is the default users table that is brought in by the authTables
     users: defineTable({
-      name: v.optional(v.string()), // name of the user. do not remove
-      image: v.optional(v.string()), // image of the user. do not remove
-      email: v.optional(v.string()), // email of the user. do not remove
-      emailVerificationTime: v.optional(v.number()), // email verification time. do not remove
-      isAnonymous: v.optional(v.boolean()), // is the user anonymous. do not remove
-
-      role: v.optional(roleValidator), // role of the user. do not remove
-    }).index("email", ["email"]), // index for the email. do not remove or modify
+      name: v.optional(v.string()),
+      image: v.optional(v.string()),
+      email: v.optional(v.string()),
+      emailVerificationTime: v.optional(v.number()),
+      isAnonymous: v.optional(v.boolean()),
+      role: v.optional(roleValidator),
+    }).index("email", ["email"]),
 
     tickets: defineTable({
       title: v.string(),
@@ -60,7 +56,49 @@ const schema = defineSchema(
       senderId: v.id("users"),
       content: v.string(),
       isAgentReply: v.boolean(),
-    }).index("by_ticket", ["ticketId"])
+    }).index("by_ticket", ["ticketId"]),
+
+    articles: defineTable({
+      title: v.string(),
+      slug: v.string(),
+      content: v.string(),
+      excerpt: v.string(),
+      category: v.string(),
+      tags: v.array(v.string()),
+      authorId: v.id("users"),
+      published: v.boolean(),
+      views: v.number(),
+    })
+      .index("by_slug", ["slug"])
+      .index("by_category", ["category"])
+      .index("by_published", ["published"]),
+
+    bookings: defineTable({
+      title: v.string(),
+      description: v.string(),
+      userId: v.id("users"),
+      scheduledAt: v.number(),
+      duration: v.number(),
+      status: v.union(
+        v.literal("pending"),
+        v.literal("confirmed"),
+        v.literal("cancelled"),
+      ),
+      type: v.string(),
+    })
+      .index("by_user", ["userId"])
+      .index("by_status", ["status"])
+      .index("by_scheduledAt", ["scheduledAt"]),
+
+    posts: defineTable({
+      title: v.string(),
+      content: v.string(),
+      authorId: v.id("users"),
+      category: v.string(),
+      tags: v.array(v.string()),
+    })
+      .index("by_author", ["authorId"])
+      .index("by_category", ["category"]),
   },
   {
     schemaValidation: false,

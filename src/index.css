@@ -42,82 +42,45 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* SWISS DESIGN THEME — strict typographic grid, square corners, restrained palette */
+/* ALPINE SUPPORT HUB — dark, technical, developer-facing */
 :root {
   --radius: 0rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.09 0 0);
-  --card: oklch(0.995 0 0);
-  --card-foreground: oklch(0.09 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.09 0 0);
-  --primary: oklch(0.09 0 0);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.95 0 0);
-  --secondary-foreground: oklch(0.09 0 0);
-  --muted: oklch(0.955 0 0);
-  --muted-foreground: oklch(0.42 0 0);
-  --accent: oklch(0.45 0.18 255);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.52 0.22 25);
-  --border: oklch(0.90 0 0);
-  --input: oklch(0.92 0 0);
-  --ring: oklch(0.45 0.18 255);
-  --chart-1: oklch(0.52 0.22 25);
-  --chart-2: oklch(0.45 0.18 255);
-  --chart-3: oklch(0.09 0 0);
-  --chart-4: oklch(0.70 0.15 255);
-  --chart-5: oklch(0.85 0.08 25);
-  --swiss-red: oklch(0.52 0.22 25);
-  --swiss-black: oklch(0.09 0 0);
-  --swiss-blue: oklch(0.45 0.18 255);
-  --swiss-light: oklch(0.97 0 0);
-  --sidebar: oklch(0.97 0 0);
-  --sidebar-foreground: oklch(0.09 0 0);
-  --sidebar-primary: oklch(0.09 0 0);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.93 0 0);
-  --sidebar-accent-foreground: oklch(0.09 0 0);
-  --sidebar-border: oklch(0.90 0 0);
-  --sidebar-ring: oklch(0.45 0.18 255);
-}
-
-.dark {
-  --background: oklch(0.09 0 0);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.14 0 0);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.14 0 0);
-  --popover-foreground: oklch(0.97 0 0);
-  --primary: oklch(0.97 0 0);
-  --primary-foreground: oklch(0.09 0 0);
-  --secondary: oklch(0.20 0 0);
-  --secondary-foreground: oklch(0.97 0 0);
-  --muted: oklch(0.20 0 0);
-  --muted-foreground: oklch(0.60 0 0);
-  --accent: oklch(0.60 0.18 255);
-  --accent-foreground: oklch(0.97 0 0);
-  --destructive: oklch(0.62 0.22 25);
-  --border: oklch(0.25 0 0);
-  --input: oklch(0.22 0 0);
-  --ring: oklch(0.60 0.18 255);
-  --chart-1: oklch(0.62 0.22 25);
-  --chart-2: oklch(0.60 0.18 255);
-  --chart-3: oklch(0.97 0 0);
-  --chart-4: oklch(0.55 0.15 255);
-  --chart-5: oklch(0.80 0.10 25);
-  --swiss-red: oklch(0.62 0.22 25);
-  --swiss-black: oklch(0.09 0 0);
-  --swiss-blue: oklch(0.60 0.18 255);
-  --swiss-light: oklch(0.18 0 0);
-  --sidebar: oklch(0.12 0 0);
-  --sidebar-foreground: oklch(0.97 0 0);
-  --sidebar-primary: oklch(0.97 0 0);
-  --sidebar-primary-foreground: oklch(0.09 0 0);
-  --sidebar-accent: oklch(0.20 0 0);
-  --sidebar-accent-foreground: oklch(0.97 0 0);
-  --sidebar-border: oklch(0.25 0 0);
-  --sidebar-ring: oklch(0.60 0.18 255);
+  --background: oklch(0.11 0 0);
+  --foreground: oklch(0.93 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.93 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.93 0 0);
+  --primary: oklch(0.65 0.15 255);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.18 0 0);
+  --secondary-foreground: oklch(0.85 0 0);
+  --muted: oklch(0.17 0 0);
+  --muted-foreground: oklch(0.55 0 0);
+  --accent: oklch(0.65 0.15 255);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.60 0.20 25);
+  --border: oklch(0.22 0 0);
+  --input: oklch(0.19 0 0);
+  --ring: oklch(0.65 0.15 255);
+  --chart-1: oklch(0.65 0.15 255);
+  --chart-2: oklch(0.60 0.20 25);
+  --chart-3: oklch(0.70 0.12 180);
+  --chart-4: oklch(0.55 0.10 280);
+  --chart-5: oklch(0.75 0.08 200);
+  --alpine-blue: oklch(0.65 0.15 255);
+  --alpine-cyan: oklch(0.75 0.12 200);
+  --alpine-red: oklch(0.60 0.20 25);
+  --alpine-green: oklch(0.72 0.16 155);
+  --alpine-surface: oklch(0.145 0 0);
+  --sidebar: oklch(0.10 0 0);
+  --sidebar-foreground: oklch(0.93 0 0);
+  --sidebar-primary: oklch(0.65 0.15 255);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.16 0 0);
+  --sidebar-accent-foreground: oklch(0.85 0 0);
+  --sidebar-border: oklch(0.20 0 0);
+  --sidebar-ring: oklch(0.65 0.15 255);
 }
 
 @layer base {
@@ -133,42 +96,45 @@
   }
 }
 
-/* Swiss Design Utilities */
-.swiss-grid {
+/* Alpine Design Utilities */
+.alpine-grid {
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(12, 1fr);
 }
 
-.swiss-rule {
-  border: 2px solid var(--foreground);
+.alpine-rule {
+  border: 1px solid var(--border);
 }
 
-.swiss-accent-bar {
-  width: 4px;
+.alpine-accent-bar {
+  width: 3px;
   height: 100%;
-  background: var(--swiss-red);
+  background: var(--alpine-blue);
 }
 
-.swiss-heading {
-  font-family: system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  line-height: 0.95;
-  text-transform: uppercase;
-}
-
-.swiss-label {
-  font-family: system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+.alpine-heading {
+  font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
   font-weight: 700;
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.alpine-label {
+  font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
 
-.swiss-body {
-  font-family: system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+.alpine-body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
   font-weight: 400;
   line-height: 1.6;
+}
+
+.alpine-mono {
+  font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 }

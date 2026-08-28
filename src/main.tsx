@@ -22,6 +22,11 @@ const AgentDashboard = lazy(() => import("./pages/AgentDashboard.tsx"));
 const AgentTicketDetail = lazy(
   () => import("./pages/AgentTicketDetail.tsx"),
 );
+const KnowledgeBase = lazy(() => import("./pages/KnowledgeBase.tsx"));
+const ArticleDetail = lazy(() => import("./pages/ArticleDetail.tsx"));
+const Schedule = lazy(() => import("./pages/Schedule.tsx"));
+const Posts = lazy(() => import("./pages/Posts.tsx"));
+const Admin = lazy(() => import("./pages/Admin.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 // Simple loading fallback for route transitions
@@ -142,7 +147,7 @@ createRoot(document.getElementById("root")!).render(
                 }
               />
               <Route
-                path="/dashboard/my-tickets"
+                path="/dashboard/tickets"
                 element={
                   <RequireAuth>
                     <CustomerTickets />
@@ -150,7 +155,7 @@ createRoot(document.getElementById("root")!).render(
                 }
               />
               <Route
-                path="/dashboard/new-ticket"
+                path="/dashboard/tickets/new"
                 element={
                   <RequireAuth>
                     <NewTicket />
@@ -158,7 +163,7 @@ createRoot(document.getElementById("root")!).render(
                 }
               />
               <Route
-                path="/dashboard/my-tickets/:ticketId"
+                path="/dashboard/tickets/:ticketId"
                 element={
                   <RequireAuth>
                     <CustomerTicketDetail />
@@ -178,6 +183,46 @@ createRoot(document.getElementById("root")!).render(
                 element={
                   <RequireAuth>
                     <AgentTicketDetail />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/dashboard/knowledge-base"
+                element={
+                  <RequireAuth>
+                    <KnowledgeBase />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/dashboard/knowledge-base/:slug"
+                element={
+                  <RequireAuth>
+                    <ArticleDetail />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/dashboard/schedule"
+                element={
+                  <RequireAuth>
+                    <Schedule />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/dashboard/posts"
+                element={
+                  <RequireAuth>
+                    <Posts />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/dashboard/admin"
+                element={
+                  <RequireAuth>
+                    <Admin />
                   </RequireAuth>
                 }
               />

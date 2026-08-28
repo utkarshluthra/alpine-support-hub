@@ -3,23 +3,19 @@ import { useParams, Link } from "react-router";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
-import {
-  ArrowLeft,
-  Send,
-  UserPlus,
-  ChevronDown,
-} from "lucide-react";
+import { AppLayout } from "@/components/AppLayout";
+import { ArrowLeft, Send, UserPlus } from "lucide-react";
 
 const STATUSES = [
-  { value: "open" as const, label: "Open", className: "bg-[var(--swiss-blue)] text-white" },
-  { value: "in_progress" as const, label: "In Progress", className: "bg-[var(--swiss-black)] text-white" },
-  { value: "resolved" as const, label: "Resolved", className: "bg-green-700 text-white" },
-  { value: "closed" as const, label: "Closed", className: "bg-muted text-muted-foreground" },
+  { value: "open" as const, label: "Open" },
+  { value: "in_progress" as const, label: "Active" },
+  { value: "resolved" as const, label: "Resolved" },
+  { value: "closed" as const, label: "Closed" },
 ];
 
 const PRIORITIES = [
   { value: "low" as const, label: "Low" },
-  { value: "medium" as const, label: "Medium" },
+  { value: "medium" as const, label: "Med" },
   { value: "high" as const, label: "High" },
   { value: "urgent" as const, label: "Urgent" },
 ];
@@ -56,175 +52,136 @@ export default function AgentTicketDetail() {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!reply.trim() || !ticketId) return;
-
     setIsSending(true);
     try {
-      // First assign the ticket to the current agent if not already assigned
       if (!ticket?.agentId) {
         await assignTicket({ ticketId: ticketId as any });
       }
       await sendMessage({ ticketId: ticketId as any, content: reply.trim() });
       setReply("");
     } catch (error) {
-      console.error("Failed to send reply:", error);
+      console.error("Failed to send:", error);
     } finally {
       setIsSending(false);
     }
   };
 
-  const handleStatusChange = async (status: typeof STATUSES[number]["value"]) => {
-    if (!ticketId) return;
-    try {
-      await updateStatus({ ticketId: ticketId as any, status });
-    } catch (error) {
-      console.error("Failed to update status:", error);
-    }
-  };
-
-  const handlePriorityChange = async (priority: typeof PRIORITIES[number]["value"]) => {
-    if (!ticketId) return;
-    try {
-      await updatePriority({ ticketId: ticketId as any, priority });
-    } catch (error) {
-      console.error("Failed to update priority:", error);
-    }
-  };
-
   if (ticket === undefined || messages === undefined) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-muted-foreground">Loading ticket...</p>
-      </main>
+      <AppLayout>
+        <div className="px-8 py-16 text-center text-sm text-muted-foreground">
+          Loading...
+        </div>
+      </AppLayout>
     );
   }
 
   if (!ticket) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="swiss-heading text-4xl">Ticket Not Found</h1>
+      <AppLayout>
+        <div className="px-8 py-16 text-center">
+          <h1 className="alpine-heading text-2xl">Not Found</h1>
           <Link
             to="/dashboard/agent"
-            className="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="mt-4 inline-flex items-center gap-2 text-xs text-muted-foreground"
           >
-            <ArrowLeft className="size-4" />
-            Back to dashboard
+            <ArrowLeft className="size-3" /> Back
           </Link>
         </div>
-      </main>
+      </AppLayout>
     );
   }
 
-  const currentStatus = STATUSES.find((s) => s.value === ticket.status);
-  const currentPriority = PRIORITIES.find((p) => p.value === ticket.priority);
-
   return (
-    <main className="min-h-screen bg-background">
-      {/* Top Bar */}
-      <div className="border-b-2 border-foreground bg-[var(--swiss-black)] text-white">
-        <div className="mx-auto max-w-7xl px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex size-8 items-center justify-center bg-[var(--swiss-red)]">
-              <span className="text-xs font-bold">A</span>
-            </div>
-            <span className="text-sm font-bold uppercase tracking-wider">
-              Agent Console
-            </span>
-          </div>
-          <Link
-            to="/dashboard/agent"
-            className="text-xs text-white/60 hover:text-white transition-colors uppercase tracking-wider font-bold"
-          >
-            Back to Dashboard
-          </Link>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-6xl px-8 py-8">
+    <AppLayout>
+      <div className="px-8 py-8">
         <Link
           to="/dashboard/agent"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
-          <ArrowLeft className="size-4" />
+          <ArrowLeft className="size-3" />
           Back to all tickets
         </Link>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
           {/* Main Column */}
-          <div className="lg:col-span-8 border-2 border-foreground">
-            {/* Ticket Header */}
-            <div className="border-b-2 border-foreground p-6">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="swiss-label text-[var(--swiss-red)]">
+          <div className="lg:col-span-8 border border-border">
+            {/* Header */}
+            <div className="border-b border-border p-5">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="alpine-label text-primary">
                   #{ticket._id.slice(-6).toUpperCase()}
                 </span>
                 <span
-                  className={`inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${currentStatus?.className}`}
+                  className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border border-current ${
+                    ticket.status === "open"
+                      ? "text-primary"
+                      : ticket.status === "in_progress"
+                        ? "text-[var(--alpine-cyan)]"
+                        : ticket.status === "resolved"
+                          ? "text-[var(--alpine-green)]"
+                          : "text-muted-foreground"
+                  }`}
                 >
-                  {currentStatus?.label}
+                  {ticket.status.replace("_", " ")}
                 </span>
               </div>
-              <h1 className="swiss-heading text-2xl lg:text-3xl">
+              <h1 className="alpine-heading text-xl lg:text-2xl">
                 {ticket.title}
               </h1>
               <div className="mt-2 flex items-center gap-3">
-                <span className="swiss-label text-muted-foreground">
-                  {ticket.category}
-                </span>
-                <span className="text-foreground/20">—</span>
-                <span className="swiss-label text-muted-foreground">
-                  {ticket.customerName}
-                </span>
+                <span className="alpine-label">{ticket.category}</span>
+                <span className="text-border">/</span>
+                <span className="alpine-label">{ticket.customerName}</span>
               </div>
             </div>
 
-            {/* Original Description */}
-            <div className="border-b-2 border-foreground p-6 bg-muted/30">
-              <div className="swiss-label mb-3">Description</div>
+            {/* Description */}
+            <div className="border-b border-border p-5 bg-muted/30">
+              <div className="alpine-label mb-2">Description</div>
               <p className="text-sm leading-relaxed whitespace-pre-wrap">
                 {ticket.description}
               </p>
             </div>
 
-            {/* Conversation Thread */}
-            <div className="p-6">
-              <div className="swiss-label mb-6">
-                Conversation ({messages.length} message
-                {messages.length !== 1 ? "s" : ""})
+            {/* Messages */}
+            <div className="p-5">
+              <div className="alpine-label mb-4">
+                Conversation ({messages.length})
               </div>
 
               <div className="space-y-0">
                 {messages.map((msg) => (
                   <div
                     key={msg._id}
-                    className={`border-2 border-foreground -mb-[2px] last:mb-0 ${
+                    className={`border border-border -mb-px last:mb-0 ${
                       msg.isAgentReply
-                        ? "border-l-4 border-l-[var(--swiss-blue)] bg-[var(--swiss-blue)]/5"
+                        ? "border-l-[3px] border-l-[var(--alpine-blue)] bg-primary/[0.03]"
                         : ""
                     }`}
                   >
-                    <div className="px-5 py-4">
-                      <div className="flex items-center justify-between mb-2">
+                    <div className="px-4 py-3.5">
+                      <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-sm">
+                          <span className="text-sm font-medium">
                             {msg.senderName}
                           </span>
                           {msg.isAgentReply && (
-                            <span className="bg-[var(--swiss-blue)] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                            <span className="bg-primary/20 text-primary px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider">
                               Agent
                             </span>
                           )}
                           {msg.senderId === user?._id && (
-                            <span className="bg-[var(--swiss-black)] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                            <span className="bg-muted text-foreground px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider">
                               You
                             </span>
                           )}
                         </div>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-[10px] text-muted-foreground alpine-mono">
                           {formatTime(msg._creationTime)}
                         </span>
                       </div>
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
                         {msg.content}
                       </p>
                     </div>
@@ -232,160 +189,155 @@ export default function AgentTicketDetail() {
                 ))}
 
                 {messages.length === 0 && (
-                  <div className="border-2 border-dashed border-foreground/30 py-10 text-center">
-                    <p className="text-sm text-muted-foreground">
+                  <div className="border border-dashed border-border py-8 text-center">
+                    <p className="text-xs text-muted-foreground">
                       No replies yet. Start the conversation below.
                     </p>
                   </div>
                 )}
               </div>
 
-              {/* Reply Form */}
-              <form onSubmit={handleSend} className="mt-6">
-                <label className="swiss-label block mb-3">Agent Reply</label>
+              {/* Reply */}
+              <form onSubmit={handleSend} className="mt-5">
+                <label className="alpine-label block mb-2">Agent Reply</label>
                 <textarea
                   value={reply}
                   onChange={(e) => setReply(e.target.value)}
-                  placeholder="Type your response to the customer..."
+                  placeholder="Type your response..."
                   rows={4}
-                  className="w-full border-2 border-foreground bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--swiss-blue)] focus:ring-offset-2 resize-none transition-shadow"
+                  className="w-full border border-border bg-input px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none transition-shadow"
                 />
-                <div className="mt-4 flex justify-between items-center">
-                  <p className="text-xs text-muted-foreground">
+                <div className="mt-3 flex justify-between items-center">
+                  <span className="text-[10px] text-muted-foreground">
                     {ticket.agentId === user?._id
-                      ? "You are assigned to this ticket"
-                      : "Replying will assign this ticket to you"}
-                  </p>
+                      ? "You are assigned"
+                      : "Replying assigns you to this ticket"}
+                  </span>
                   <button
                     type="submit"
                     disabled={isSending || !reply.trim()}
-                    className="inline-flex items-center gap-2 bg-[var(--swiss-blue)] px-6 py-3 text-sm font-bold uppercase tracking-wider text-white hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/80 transition-colors disabled:opacity-50"
                   >
-                    {isSending ? (
-                      "Sending..."
-                    ) : (
-                      <>
-                        Send Reply
-                        <Send className="size-4" />
-                      </>
-                    )}
+                    {isSending ? "Sending..." : "Send Reply"}
+                    {!isSending && <Send className="size-3.5" />}
                   </button>
                 </div>
               </form>
             </div>
           </div>
 
-          {/* Sidebar - Ticket Info */}
-          <div className="lg:col-span-4 border-2 border-l-0 border-foreground">
-            <div className="p-6 border-b-2 border-foreground">
-              <div className="swiss-label mb-4">Ticket Details</div>
-
-              {/* Status */}
-              <div className="mb-5">
-                <span className="swiss-label block mb-2 text-muted-foreground">
-                  Status
-                </span>
-                <div className="grid grid-cols-2 gap-0 border-2 border-foreground">
-                  {STATUSES.map((s) => (
-                    <button
-                      key={s.value}
-                      onClick={() => handleStatusChange(s.value)}
-                      className={`px-3 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors border-foreground ${
-                        ticket.status === s.value
-                          ? s.className
-                          : "hover:bg-muted"
-                      } ${
-                        s.value !== "closed" && s.value !== "resolved"
-                          ? "border-r-2"
-                          : ""
-                      }`}
-                    >
-                      {s.label}
-                    </button>
-                  ))}
-                </div>
+          {/* Sidebar */}
+          <div className="lg:col-span-4 border border-l-0 border-border">
+            {/* Status */}
+            <div className="p-5 border-b border-border">
+              <div className="alpine-label mb-3">Status</div>
+              <div className="grid grid-cols-2 gap-0 border border-border">
+                {STATUSES.map((s) => (
+                  <button
+                    key={s.value}
+                    onClick={() =>
+                      updateStatus({
+                        ticketId: ticketId as any,
+                        status: s.value,
+                      })
+                    }
+                    className={`px-3 py-2 text-[10px] font-semibold uppercase tracking-wider transition-colors ${
+                      ticket.status === s.value
+                        ? s.value === "open"
+                          ? "bg-primary text-primary-foreground"
+                          : s.value === "in_progress"
+                            ? "bg-[var(--alpine-cyan)]/20 text-[var(--alpine-cyan)]"
+                            : s.value === "resolved"
+                              ? "bg-[var(--alpine-green)]/20 text-[var(--alpine-green)]"
+                              : "bg-muted text-muted-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    } ${s.value !== "closed" && s.value !== "resolved" ? "border-r border-border" : ""}`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              {/* Priority */}
-              <div className="mb-5">
-                <span className="swiss-label block mb-2 text-muted-foreground">
-                  Priority
-                </span>
-                <div className="grid grid-cols-4 gap-0 border-2 border-foreground">
-                  {PRIORITIES.map((p) => (
-                    <button
-                      key={p.value}
-                      onClick={() => handlePriorityChange(p.value)}
-                      className={`px-2 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors border-foreground ${
-                        ticket.priority === p.value
-                          ? p.value === "urgent" || p.value === "high"
-                            ? "bg-[var(--swiss-red)] text-white"
-                            : "bg-[var(--swiss-black)] text-white"
-                          : "hover:bg-muted"
-                      } ${p.value !== "urgent" ? "border-r-2" : ""}`}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
+            {/* Priority */}
+            <div className="p-5 border-b border-border">
+              <div className="alpine-label mb-3">Priority</div>
+              <div className="grid grid-cols-4 gap-0 border border-border">
+                {PRIORITIES.map((p) => (
+                  <button
+                    key={p.value}
+                    onClick={() =>
+                      updatePriority({
+                        ticketId: ticketId as any,
+                        priority: p.value,
+                      })
+                    }
+                    className={`px-2 py-2 text-[10px] font-semibold uppercase tracking-wider transition-colors ${
+                      ticket.priority === p.value
+                        ? p.value === "urgent" || p.value === "high"
+                          ? "bg-[var(--alpine-red)]/20 text-[var(--alpine-red)]"
+                          : "bg-primary/20 text-primary"
+                        : "text-muted-foreground hover:text-foreground"
+                    } ${p.value !== "urgent" ? "border-r border-border" : ""}`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              {/* Assignment */}
-              <div className="mb-5">
-                <span className="swiss-label block mb-2 text-muted-foreground">
-                  Assigned Agent
-                </span>
-                <div className="border-2 border-foreground px-4 py-3">
-                  <div className="text-sm font-medium">
-                    {ticket.agentName || (
-                      <span className="text-muted-foreground italic">
-                        Unassigned
-                      </span>
-                    )}
-                  </div>
-                  {ticket.agentId !== user?._id && (
-                    <button
-                      onClick={() => handleStatusChange("in_progress")}
-                      className="mt-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[var(--swiss-blue)] hover:underline"
-                    >
-                      <UserPlus className="size-3" />
-                      Assign to me
-                    </button>
+            {/* Assignment */}
+            <div className="p-5 border-b border-border">
+              <div className="alpine-label mb-3">Assigned Agent</div>
+              <div className="border border-border px-4 py-3">
+                <div className="text-sm font-medium">
+                  {ticket.agentName || (
+                    <span className="text-muted-foreground italic">
+                      Unassigned
+                    </span>
                   )}
                 </div>
+                {ticket.agentId !== user?._id && (
+                  <button
+                    onClick={() =>
+                      updateStatus({
+                        ticketId: ticketId as any,
+                        status: "in_progress",
+                      })
+                    }
+                    className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-primary hover:underline"
+                  >
+                    <UserPlus className="size-3" />
+                    Assign to me
+                  </button>
+                )}
               </div>
+            </div>
 
-              {/* Customer Info */}
-              <div>
-                <span className="swiss-label block mb-2 text-muted-foreground">
-                  Customer
-                </span>
-                <div className="border-2 border-foreground px-4 py-3">
-                  <div className="text-sm font-medium">
-                    {ticket.customerName}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {ticket.customerEmail}
-                  </div>
+            {/* Customer */}
+            <div className="p-5 border-b border-border">
+              <div className="alpine-label mb-3">Customer</div>
+              <div className="border border-border px-4 py-3">
+                <div className="text-sm font-medium">{ticket.customerName}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">
+                  {ticket.customerEmail}
                 </div>
               </div>
             </div>
 
             {/* Metadata */}
-            <div className="p-6">
-              <div className="swiss-label mb-4">Metadata</div>
-              <div className="space-y-3">
+            <div className="p-5">
+              <div className="alpine-label mb-3">Metadata</div>
+              <div className="space-y-2">
                 <div className="flex justify-between text-xs">
-                  <span className="swiss-label text-muted-foreground">
-                    Created
+                  <span className="text-muted-foreground">Created</span>
+                  <span className="alpine-mono text-[10px]">
+                    {formatTime(ticket._creationTime)}
                   </span>
-                  <span>{formatTime(ticket._creationTime)}</span>
                 </div>
                 <div className="flex justify-between text-xs">
-                  <span className="swiss-label text-muted-foreground">
-                    Ticket ID
-                  </span>
-                  <span className="font-mono text-[10px]">
+                  <span className="text-muted-foreground">ID</span>
+                  <span className="alpine-mono text-[10px]">
                     {ticket._id.slice(-8).toUpperCase()}
                   </span>
                 </div>
@@ -394,6 +346,6 @@ export default function AgentTicketDetail() {
           </div>
         </div>
       </div>
-    </main>
+    </AppLayout>
   );
 }

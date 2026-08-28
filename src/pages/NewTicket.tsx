@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { AppLayout } from "@/components/AppLayout";
 import { ArrowLeft, Send } from "lucide-react";
 
 const CATEGORIES = [
@@ -32,7 +33,7 @@ export default function NewTicket() {
         description: description.trim(),
         category,
       });
-      navigate(`/dashboard/my-tickets/${ticketId}`);
+      navigate(`/dashboard/tickets/${ticketId}`);
     } catch (error) {
       console.error("Failed to create ticket:", error);
       setIsSubmitting(false);
@@ -40,49 +41,40 @@ export default function NewTicket() {
   };
 
   return (
-    <main className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b-2 border-foreground">
-        <div className="mx-auto max-w-3xl px-8 py-10">
-          <Link
-            to="/dashboard"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
-          >
-            <ArrowLeft className="size-4" />
-            Back to tickets
-          </Link>
-          <span className="swiss-label text-[var(--swiss-red)]">
-            New Request
-          </span>
-          <h1 className="swiss-heading text-4xl lg:text-5xl mt-3">
-            Submit a
-            <br />
-            Ticket
-          </h1>
+    <AppLayout>
+      <div className="px-8 py-8 max-w-3xl">
+        <Link
+          to="/dashboard/tickets"
+          className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors mb-6"
+        >
+          <ArrowLeft className="size-3" />
+          Back to tickets
+        </Link>
+        <div className="mb-8">
+          <span className="alpine-label text-primary">New Request</span>
+          <h1 className="alpine-heading text-2xl mt-2">Submit a Ticket</h1>
         </div>
-      </div>
 
-      {/* Form */}
-      <div className="mx-auto max-w-3xl px-8 py-8">
         <form onSubmit={handleSubmit}>
-          <div className="space-y-8">
-            {/* Category */}
+          <div className="space-y-6">
             <div>
-              <label className="swiss-label block mb-3">Category</label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-0 border-2 border-foreground">
-                {CATEGORIES.map((cat) => (
+              <label className="alpine-label block mb-2">Category</label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-0 border border-border">
+                {CATEGORIES.map((cat, i) => (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => setCategory(cat)}
-                    className={`px-4 py-3 text-xs font-bold uppercase tracking-wider transition-colors border-foreground ${
+                    className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider transition-colors ${
                       category === cat
-                        ? "bg-[var(--swiss-black)] text-white"
-                        : "hover:bg-muted"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted"
                     } ${
-                      cat !== CATEGORIES[CATEGORIES.length - 1]
-                        ? "border-b-2 sm:border-b-0 sm:border-r-2"
-                        : "border-b-2 sm:border-b-0"
+                      i < CATEGORIES.length - 1
+                        ? "border-r border-border"
+                        : ""
+                    } ${i < 3 ? "border-b sm:border-b-0 border-border" : ""} ${
+                      i === 3 ? "border-b sm:border-b-0 border-border" : ""
                     }`}
                   >
                     {cat}
@@ -91,9 +83,8 @@ export default function NewTicket() {
               </div>
             </div>
 
-            {/* Title */}
             <div>
-              <label className="swiss-label block mb-3" htmlFor="title">
+              <label className="alpine-label block mb-2" htmlFor="title">
                 Subject
               </label>
               <input
@@ -102,43 +93,41 @@ export default function NewTicket() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Brief description of your issue"
-                className="w-full border-2 border-foreground bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--swiss-blue)] focus:ring-offset-2 transition-shadow"
+                className="w-full border border-border bg-input px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-shadow"
                 required
               />
             </div>
 
-            {/* Description */}
             <div>
-              <label className="swiss-label block mb-3" htmlFor="description">
+              <label className="alpine-label block mb-2" htmlFor="description">
                 Description
               </label>
               <textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Provide as much detail as possible to help us resolve your issue quickly..."
+                placeholder="Provide as much detail as possible..."
                 rows={8}
-                className="w-full border-2 border-foreground bg-background px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--swiss-blue)] focus:ring-offset-2 transition-shadow resize-none"
+                className="w-full border border-border bg-input px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none transition-shadow"
                 required
               />
             </div>
 
-            {/* Submit */}
-            <div className="flex items-center justify-between border-t-2 border-foreground pt-8">
+            <div className="flex items-center justify-between border-t border-border pt-6">
               <p className="text-xs text-muted-foreground">
                 Our team typically responds within 4 hours.
               </p>
               <button
                 type="submit"
                 disabled={isSubmitting || !title.trim() || !description.trim()}
-                className="inline-flex items-center gap-2 bg-[var(--swiss-red)] px-8 py-3 text-sm font-bold uppercase tracking-wider text-white hover:bg-[var(--swiss-red)]/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 bg-primary px-6 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   "Submitting..."
                 ) : (
                   <>
-                    Submit Ticket
-                    <Send className="size-4" />
+                    Submit
+                    <Send className="size-3.5" />
                   </>
                 )}
               </button>
@@ -146,6 +135,6 @@ export default function NewTicket() {
           </div>
         </form>
       </div>
-    </main>
+    </AppLayout>
   );
 }
