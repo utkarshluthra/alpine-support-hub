@@ -107,11 +107,11 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
         <div className="flex items-center gap-1 border-b border-border px-5 py-2">
           {(
             [
-              { key: "all", label: "All" },
-              { key: "tickets", label: "Tickets", icon: Ticket },
-              { key: "articles", label: "Articles", icon: BookOpen },
-              { key: "posts", label: "Posts", icon: MessageSquare },
-            ] as const
+              { key: "all" as const, label: "All" },
+              { key: "tickets" as const, label: "Tickets", icon: Ticket },
+              { key: "articles" as const, label: "Articles", icon: BookOpen },
+              { key: "posts" as const, label: "Posts", icon: MessageSquare },
+            ]
           ).map((f) => (
             <button
               key={f.key}
@@ -122,7 +122,7 @@ export function GlobalSearch({ open, onClose }: GlobalSearchProps) {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {f.icon && <f.icon className="size-3" />}
+              {"icon" in f && f.icon && <f.icon className="size-3" />}
               {f.label}
             </button>
           ))}

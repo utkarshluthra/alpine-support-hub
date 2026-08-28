@@ -5,6 +5,8 @@ import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
 import { AppLayout } from "@/components/AppLayout";
 import { ArrowLeft, Send, UserPlus } from "lucide-react";
+import { ReferenceInput } from "@/components/ReferenceInput";
+import { ReferenceRenderer } from "@/components/ReferenceRenderer";
 
 const STATUSES = [
   { value: "open" as const, label: "Open" },
@@ -182,7 +184,7 @@ export default function AgentTicketDetail() {
                         </span>
                       </div>
                       <p className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
-                        {msg.content}
+                        <ReferenceRenderer text={msg.content} />
                       </p>
                     </div>
                   </div>
@@ -200,12 +202,11 @@ export default function AgentTicketDetail() {
               {/* Reply */}
               <form onSubmit={handleSend} className="mt-5">
                 <label className="alpine-label block mb-2">Agent Reply</label>
-                <textarea
+                <ReferenceInput
                   value={reply}
-                  onChange={(e) => setReply(e.target.value)}
-                  placeholder="Type your response..."
+                  onChange={setReply}
+                  placeholder="Type your response... Use #ticket:id or #article:slug to reference"
                   rows={4}
-                  className="w-full border border-border bg-input px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none transition-shadow"
                 />
                 <div className="mt-3 flex justify-between items-center">
                   <span className="text-[10px] text-muted-foreground">

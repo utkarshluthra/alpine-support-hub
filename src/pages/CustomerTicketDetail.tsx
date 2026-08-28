@@ -5,6 +5,8 @@ import { api } from "@/convex/_generated/api";
 import { useAuth } from "@/hooks/use-auth";
 import { AppLayout } from "@/components/AppLayout";
 import { ArrowLeft, Send } from "lucide-react";
+import { ReferenceInput } from "@/components/ReferenceInput";
+import { ReferenceRenderer } from "@/components/ReferenceRenderer";
 
 function formatTime(ts: number) {
   const d = new Date(ts);
@@ -158,10 +160,9 @@ export default function CustomerTicketDetail() {
                   <span className="text-[10px] text-muted-foreground alpine-mono">
                     {formatTime(msg._creationTime)}
                   </span>
-                </div>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
-                  {msg.content}
-                </p>
+                </div>                <p className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
+                    <ReferenceRenderer text={msg.content} />
+                  </p>
               </div>
             </div>
           ))}
@@ -179,12 +180,11 @@ export default function CustomerTicketDetail() {
         {ticket.status !== "closed" && (
           <form onSubmit={handleSend} className="mt-6">
             <label className="alpine-label block mb-2">Reply</label>
-            <textarea
+            <ReferenceInput
               value={reply}
-              onChange={(e) => setReply(e.target.value)}
-              placeholder="Type your reply..."
+              onChange={setReply}
+              placeholder="Type your reply... Use #ticket:id or #article:slug to reference"
               rows={4}
-              className="w-full border border-border bg-input px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none transition-shadow"
             />
             <div className="mt-3 flex justify-end">
               <button
