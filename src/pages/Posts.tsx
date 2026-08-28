@@ -3,6 +3,8 @@ import { api } from "@/convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 import { AppLayout } from "@/components/AppLayout";
 import { Plus, Send, Trash2 } from "lucide-react";
+import { ReferenceInput } from "@/components/ReferenceInput";
+import { ReferenceRenderer } from "@/components/ReferenceRenderer";
 
 const POST_CATEGORIES = [
   "General",
@@ -135,13 +137,11 @@ export default function Posts() {
               </div>
               <div>
                 <label className="alpine-label block mb-1.5">Content</label>
-                <textarea
+                <ReferenceInput
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Write your post..."
+                  onChange={setContent}
+                  placeholder="Write your post... Use #ticket:id, #article:slug, or #post:id to reference other items"
                   rows={6}
-                  className="w-full border border-border bg-input px-3 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none"
-                  required
                 />
               </div>
               <div>

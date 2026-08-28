@@ -10,6 +10,8 @@ import {
   LogOut,
   Mountain,
   ChevronRight,
+  Search,
+  Command,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -21,7 +23,11 @@ const NAV_ITEMS = [
   { to: "/dashboard/admin", label: "Admin", icon: Shield },
 ];
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  onSearchOpen: () => void;
+}
+
+export function AppSidebar({ onSearchOpen }: AppSidebarProps) {
   const location = useLocation();
   const { user, signOut } = useAuth();
 
@@ -33,6 +39,20 @@ export function AppSidebar() {
         <span className="alpine-label text-foreground tracking-widest">
           Alpine
         </span>
+      </div>
+
+      {/* Search Trigger */}
+      <div className="px-3 pt-3">
+        <button
+          onClick={onSearchOpen}
+          className="flex w-full items-center gap-2.5 border border-border px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+        >
+          <Search className="size-3.5 shrink-0" />
+          <span className="flex-1 text-left">Search...</span>
+          <kbd className="hidden lg:inline-flex items-center gap-0.5 border border-border px-1 py-0 text-[8px]">
+            <Command className="size-2" />K
+          </kbd>
+        </button>
       </div>
 
       {/* Nav */}
