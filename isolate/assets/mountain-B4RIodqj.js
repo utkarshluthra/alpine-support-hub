@@ -1,0 +1,1 @@
+import{c as o}from"./index-DBLhuX2w.js";const t=[["path",{d:"M5 12h14",key:"1ays0h"}],["path",{d:"m12 5 7 7-7 7",key:"xquz4c"}]],n=o("arrow-right",t);const a=[["path",{d:"m8 3 4 8 5-5 5 15H2L8 3z",key:"otkl63"}]],e=o("mountain",a);export{n as A,e as M};
