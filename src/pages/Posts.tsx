@@ -220,7 +220,7 @@ export default function Posts() {
                     </div>
                     <h3 className="text-sm font-semibold">{post.title}</h3>
                     <p className="mt-1.5 text-xs text-foreground/80 leading-relaxed whitespace-pre-wrap">
-                      {post.content}
+                      <ReferenceRenderer text={post.content} />
                     </p>
                     {post.tags.length > 0 && (
                       <div className="mt-2 flex items-center gap-1.5 flex-wrap">
